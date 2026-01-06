@@ -25,7 +25,9 @@
 #include <iostream>
 #include <omp.h>
 #include <string>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 
 namespace pmc {
 class input {
@@ -82,6 +84,8 @@ class input {
             if (threads <= 0) threads = 1;
         }
 
+#ifndef _WIN32
+        // Command-line parsing constructor only available on Unix systems
         input(int argc, char *argv[]) {
             // default values
             algorithm = 0;
@@ -189,6 +193,7 @@ class input {
             std::cout << "workers: " << threads <<std::endl;
             omp_set_num_threads(threads);
         }
+#endif
 
 };
 } // namespace pmc

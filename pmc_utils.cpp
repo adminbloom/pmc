@@ -22,11 +22,17 @@
 
 #include <cassert>
 #include <cstring>
+#ifndef _WIN32
 #include <dirent.h>
+#endif
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#ifdef _WIN32
+#include <chrono>
+#else
 #include <sys/time.h>
+#endif
 
 using namespace std;
 
@@ -59,12 +65,22 @@ void usage(char *argv0) {
 
 
 double get_time() {
+#ifdef _WIN32
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = now.time_since_epoch();
+    return std::chrono::duration<double>(duration).count();
+#else
     timeval t;
     gettimeofday(&t, NULL);
     return t.tv_sec*1.0 + t.tv_usec/1000000.0;
+#endif
 }
 
 string memory_usage() {
+#ifdef _WIN32
+    // Windows doesn't have /proc filesystem
+    return "Memory usage not available on Windows";
+#else
     ostringstream mem;
     ifstream proc("/proc/self/status");
     string s;
@@ -75,6 +91,7 @@ string memory_usage() {
         }
     }
     return mem.str();
+#endif
 }
 
 void indent(int level) {
@@ -122,6 +139,7 @@ void validate(bool condition, const string& msg) {
     }
 }
 
+#ifndef _WIN32
 int getdir (string dir, vector<string> &files) {
     DIR *dp;
     struct dirent *dirp;
@@ -137,5 +155,6 @@ int getdir (string dir, vector<string> &files) {
     closedir(dp);
     return 0;
 }
+#endif
 
 

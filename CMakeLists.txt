@@ -20,6 +20,14 @@ else()
         set_property(TARGET pmc PROPERTY POSITION_INDEPENDENT_CODE 1)
 endif()
 
+if(MSVC)
+    target_compile_options(pmc PRIVATE
+            /W4
+            /wd4100
+            /wd4127
+            /wd4189
+    )
+else()
 target_compile_options(pmc PRIVATE
         -Wall
         -Werror
@@ -28,6 +36,7 @@ target_compile_options(pmc PRIVATE
         -Wno-sign-compare
         -Wno-unused-function
 )
+endif()
 
 target_include_directories(pmc PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>

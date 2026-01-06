@@ -80,7 +80,7 @@ int pmc_heu::search_bounds(const pmc_graph& G, std::vector<int>& C_max) {
         num_threads(num_threads)
     for (int i = G.num_vertices()-1; i >= 0; --i) {
         bool found_ub_local = false;
-        #pragma omp atomic read acquire
+        #pragma omp critical
         found_ub_local = found_ub;
 
         if (found_ub_local) {
@@ -105,7 +105,7 @@ int pmc_heu::search_bounds(const pmc_graph& G, std::vector<int>& C_max) {
                 branch(P, 1 , mc_cur, C, ind);
 
                 if (mc_cur >= ub) {
-                    #pragma omp atomic write release
+                    #pragma omp critical
                     found_ub = true;
                 }
 

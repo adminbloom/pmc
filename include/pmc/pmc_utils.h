@@ -37,6 +37,8 @@ void indent(int level, std::string str);
 void print_max_clique(std::vector<int> &max_clique_data);
 void print_n_maxcliques(std::set<std::vector<int>> C, int n);
 
+#ifndef _WIN32
 int getdir(std::string dir, std::vector<std::string> &files);
+#endif
 
 #endif
